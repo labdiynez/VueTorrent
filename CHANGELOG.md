@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.28.0](https://github.com/labdiynez/VueTorrent/compare/v2.27.0...v2.28.0) (2025-07-02)
+
+
+### Features
+
+* **RightClick:** Add selection actions ([#2362](https://github.com/labdiynez/VueTorrent/issues/2362)) ([5f0626f](https://github.com/labdiynez/VueTorrent/commit/5f0626f7925e4b7c38f633971b5ade2b823bfc0b))
+* **RightClick:** Support multiple copy actions ([#2362](https://github.com/labdiynez/VueTorrent/issues/2362)) ([72a1606](https://github.com/labdiynez/VueTorrent/commit/72a1606b146a4a973070326072bffc99e6231418))
+
 ## [2.27.0](https://github.com/VueTorrent/VueTorrent/compare/v2.26.0...v2.27.0) (2025-06-29)
 
 
