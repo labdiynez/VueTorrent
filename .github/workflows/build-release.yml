@@ -98,170 +98,170 @@ jobs:
           path: ${{ matrix.artifact-path }}
           retention-days: 1
 
-  push-nightly:
-    name: Push to nightly branch
-    runs-on: ubuntu-latest
-    needs: build-release
-    permissions:
-      contents: write
+  # push-nightly:
+  #   name: Push to nightly branch
+  #   runs-on: ubuntu-latest
+  #   needs: build-release
+  #   permissions:
+  #     contents: write
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: vuetorrent-build
-          path: ./vuetorrent
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: vuetorrent-build
+  #         path: ./vuetorrent
 
-      - name: Push to nightly-release
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: nightly-release
-          folder: ./vuetorrent
+  #     - name: Push to nightly-release
+  #       uses: JamesIves/github-pages-deploy-action@v4
+  #       with:
+  #         branch: nightly-release
+  #         folder: ./vuetorrent
 
-  push-mod-nightly:
-    name: Push docker mod to GHCR (nightly)
-    runs-on: ubuntu-latest
-    needs: build-release
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  # push-mod-nightly:
+  #   name: Push docker mod to GHCR (nightly)
+  #   runs-on: ubuntu-latest
+  #   needs: build-release
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: vuetorrent-build
-          path: ./vuetorrent
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: vuetorrent-build
+  #         path: ./vuetorrent
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Log in to the Container registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/VueTorrent/vuetorrent-lsio-mod
-          tags: |
-            type=raw,value=nightly
-            type=sha
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v6
-        env:
-          DOCKER_BUILD_SUMMARY: false
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+  #     - name: Extract metadata (tags, labels) for Docker
+  #       id: meta
+  #       uses: docker/metadata-action@v5
+  #       with:
+  #         images: ghcr.io/VueTorrent/vuetorrent-lsio-mod
+  #         tags: |
+  #           type=raw,value=nightly
+  #           type=sha
+  #     - name: Build and push Docker image
+  #       uses: docker/build-push-action@v6
+  #       env:
+  #         DOCKER_BUILD_SUMMARY: false
+  #       with:
+  #         context: .
+  #         push: true
+  #         tags: ${{ steps.meta.outputs.tags }}
+  #         labels: ${{ steps.meta.outputs.labels }}
 
-  push-demo:
-    name: Push to demo repo
-    runs-on: ubuntu-latest
-    needs: build-release
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  # push-demo:
+  #   name: Push to demo repo
+  #   runs-on: ubuntu-latest
+  #   needs: build-release
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: vuetorrent-demo
-          path: ./vuetorrent-demo
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: vuetorrent-demo
+  #         path: ./vuetorrent-demo
 
-      - name: Push to demo repo
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: './vuetorrent-demo'
-          repository-name: 'VueTorrent/demo'
-          token: ${{ secrets.GH_PAT }}
+  #     - name: Push to demo repo
+  #       uses: JamesIves/github-pages-deploy-action@v4
+  #       with:
+  #         folder: './vuetorrent-demo'
+  #         repository-name: 'VueTorrent/demo'
+  #         token: ${{ secrets.GH_PAT }}
 
-  upload-release:
-    name: Upload release to GitHub
-    needs: [ setup-release, build-release ]
-    if: needs.setup-release.outputs.release_created
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: vuetorrent-build
-          path: ./vuetorrent
+  # upload-release:
+  #   name: Upload release to GitHub
+  #   needs: [ setup-release, build-release ]
+  #   if: needs.setup-release.outputs.release_created
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: vuetorrent-build
+  #         path: ./vuetorrent
 
-      - name: Zip VueTorrent
-        run: zip -qq -r ./vuetorrent.zip ./vuetorrent
+  #     - name: Zip VueTorrent
+  #       run: zip -qq -r ./vuetorrent.zip ./vuetorrent
 
-      - name: Upload VueTorrent release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.setup-release.outputs.upload_url }}
-          asset_path: ./vuetorrent.zip
-          asset_name: vuetorrent.zip
-          asset_content_type: application/zip
+  #     - name: Upload VueTorrent release
+  #       uses: actions/upload-release-asset@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         upload_url: ${{ needs.setup-release.outputs.upload_url }}
+  #         asset_path: ./vuetorrent.zip
+  #         asset_name: vuetorrent.zip
+  #         asset_content_type: application/zip
 
-  push-release:
-    name: Push to latest branch
-    needs: [ setup-release, build-release ]
-    if: needs.setup-release.outputs.release_created
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  # push-release:
+  #   name: Push to latest branch
+  #   needs: [ setup-release, build-release ]
+  #   if: needs.setup-release.outputs.release_created
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: vuetorrent-build
-          path: ./vuetorrent
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: vuetorrent-build
+  #         path: ./vuetorrent
 
-      - name: Push to latest-release
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: latest-release
-          folder: ./vuetorrent
+  #     - name: Push to latest-release
+  #       uses: JamesIves/github-pages-deploy-action@v4
+  #       with:
+  #         branch: latest-release
+  #         folder: ./vuetorrent
 
-  push-mod-release:
-    name: Push docker mod to GHCR (release)
-    runs-on: ubuntu-latest
-    needs: [ setup-release, build-release ]
-    if: needs.setup-release.outputs.release_created
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  # push-mod-release:
+  #   name: Push docker mod to GHCR (release)
+  #   runs-on: ubuntu-latest
+  #   needs: [ setup-release, build-release ]
+  #   if: needs.setup-release.outputs.release_created
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: vuetorrent-build
-          path: ./vuetorrent
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: vuetorrent-build
+  #         path: ./vuetorrent
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Log in to the Container registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/VueTorrent/vuetorrent-lsio-mod
-          tags: |
-            type=match,pattern=v(.*),group=1,value=${{ needs.setup-release.outputs.tag_name }}
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v6
-        env:
-          DOCKER_BUILD_SUMMARY: false
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+  #     - name: Extract metadata (tags, labels) for Docker
+  #       id: meta
+  #       uses: docker/metadata-action@v5
+  #       with:
+  #         images: ghcr.io/VueTorrent/vuetorrent-lsio-mod
+  #         tags: |
+  #           type=match,pattern=v(.*),group=1,value=${{ needs.setup-release.outputs.tag_name }}
+  #     - name: Build and push Docker image
+  #       uses: docker/build-push-action@v6
+  #       env:
+  #         DOCKER_BUILD_SUMMARY: false
+  #       with:
+  #         context: .
+  #         push: true
+  #         tags: ${{ steps.meta.outputs.tags }}
+  #         labels: ${{ steps.meta.outputs.labels }}
