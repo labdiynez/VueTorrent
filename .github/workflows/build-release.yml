@@ -4,9 +4,9 @@ on:
     branches:
       - test
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.ref }}
+#   cancel-in-progress: true
 
 jobs:
   setup-release:
@@ -39,12 +39,10 @@ jobs:
         id: version
         run: |
           echo "nightly_version=$(git describe --tags --exclude latest_nightly)" >> $GITHUB_OUTPUT
-
       - name: Update nightly tag
         run: |
           git tag -f latest_nightly
           git push -f --tags
-
   build-release:
     name: Build VueTorrent
     runs-on: ubuntu-latest
@@ -84,7 +82,6 @@ jobs:
           curl -H 'X-API-KEY: ${{ secrets.TOLGEE_TOKEN }}' 'https://app.tolgee.io/v2/projects/export' -o locales.zip
           unzip -o -d ./src/locales locales.zip
           rm locales.zip
-
       - name: Update locales metadata
         uses: VueTorrent/tolgee-action@v1
         with:
@@ -94,7 +91,6 @@ jobs:
         run: |
           npm version --no-commit-hooks --no-git-tag-version --allow-same-version ${{ needs.setup-release.outputs.nightly_version }}
           npm run ${{ matrix.npm-step }}
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -155,7 +151,6 @@ jobs:
           tags: |
             type=raw,value=nightly
             type=sha
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         env:
@@ -261,7 +256,6 @@ jobs:
           images: ghcr.io/VueTorrent/vuetorrent-lsio-mod
           tags: |
             type=match,pattern=v(.*),group=1,value=${{ needs.setup-release.outputs.tag_name }}
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         env:
