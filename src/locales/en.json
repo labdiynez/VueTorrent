@@ -522,6 +522,24 @@
       "label": "Speed Limit",
       "upload": "Set Upload Speed Limit"
     },
+    "stats": {
+      "all_time_download": "All-time download",
+      "all_time_share_ratio": "All-time share ratio",
+      "all_time_upload": "All-time upload",
+      "average_time_in_queue": "Average time in queue",
+      "cache_statistics": "Cache statistics",
+      "connected_peers": "Connected peers",
+      "performance_statistics": "Performance statistics",
+      "queued_io_jobs": "Queued I/O jobs",
+      "read_cache_hits": "Read cache hits",
+      "read_cache_overload": "Read cache overload",
+      "session_waste": "Session waste",
+      "title": "Statistics",
+      "total_buffer_size": "Total buffer size",
+      "total_queued_size": "Total queued size",
+      "user_statistics": "User statistics",
+      "write_cache_overload": "Write cache overload"
+    },
     "tag": {
       "comma": "Name cannot contain comma when renaming a tag",
       "hint": "Pro tip: multiple tags can be created by separating them with a comma",
@@ -595,7 +613,8 @@
         "dark_mode.light": "Light mode",
         "dark_mode.system": "Follow system settings",
         "logout": "Logout",
-        "shutdown": "Shutdown qBittorrent"
+        "shutdown": "Shutdown qBittorrent",
+        "statistics": "Statistics"
       },
       "current_speed": {
         "title": "Current Speed"
