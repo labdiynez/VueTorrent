@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.29.0](https://github.com/labdiynez/VueTorrent/compare/v2.28.0...v2.29.0) (2025-07-18)
+
+
+### Features
+
+* **sidebar:** Add stats dialog ([#2365](https://github.com/labdiynez/VueTorrent/issues/2365)) ([f10586d](https://github.com/labdiynez/VueTorrent/commit/f10586d188e61f14ed86b3765078a93c01c2a6ee))
+
+
+### Bug Fixes
+
+* **PWA:** Proper handling of device rotation lock ([#2369](https://github.com/labdiynez/VueTorrent/issues/2369)) ([2db2197](https://github.com/labdiynez/VueTorrent/commit/2db2197329f9fee679c5c7c202ad042237c16643))
+
 ## [2.28.0](https://github.com/labdiynez/VueTorrent/compare/v2.27.0...v2.28.0) (2025-07-02)
 
 
